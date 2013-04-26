@@ -1,4 +1,5 @@
 import urllib.request
+import urllib.parse
 import tkinter
 import json
 
@@ -16,8 +17,10 @@ class App(tkinter.Frame):
         self.output.grid(columnspan=2)
 
     def retrieve(self):
-        result = urllib.request.urlopen(self.address.get()).read().decode('utf8')
-        result = json.loads(result)
+        val = {'app_secret': 'FCuf65iuOUDCjlbiyyer678Coutyc64v655478VGvgh76'}
+        data = urllib.parse.urlencode(val).encode('utf8')
+        result = urllib.request.urlopen(self.address.get(), data)
+        result = json.loads(result.read().decode('utf8'))
         result = json.dumps(result, sort_keys=True,
                             indent=4, separators=(',', ': '))
         try:
