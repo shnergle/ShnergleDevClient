@@ -73,7 +73,7 @@ class App(ttk.Frame):
         self.url_port = tk.StringVar()
         self.url_port.set('8080')
         menu_port.add_radiobutton(label='Default', variable=self.url_port,
-                                  value='')
+                                  value='default')
         menu_port.add_separator()
         menu_port.add_radiobutton(label='80', variable=self.url_port,
                                   value='80')
@@ -195,8 +195,9 @@ class App(ttk.Frame):
     @property
     def address(self):
         return (self.url_protocol.get() + '://' + self.url_server.get() +
-                (':' + self.url_port.get() if self.url_port.get() else '') +
-                '/' + self.url_method.get() + '/' + self.url_action.get())
+                (':' + self.url_port.get() if self.url_port.get() == 'def'
+                 else '') + '/' + self.url_method.get() + '/' +
+                self.url_action.get())
 
     @property
     def data(self):
