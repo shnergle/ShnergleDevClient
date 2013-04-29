@@ -215,7 +215,7 @@ class App(ttk.Frame):
         if self.post_facebook.get():
             res['facebook_token'] = self.post_facebook.get()
         if self.post_image.get():
-            pass #TODO: send image to server
+            res['image'] = open(self.post_image.get())
         return urllib.parse.urlencode(res).encode('utf8')
 
     def pretty_print(self, jsonstr):
