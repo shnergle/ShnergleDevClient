@@ -20,7 +20,7 @@ class JSONText(tk.Text):
     def highlight(self):
         self.set_tags('"[^":]*"(?=\:)', 'keystring')
         self.set_tags('"[^":]*"(?!\:)', 'string')
-        self.set_tags('[\d\.]', 'number')
+        self.set_tags('(0|[1-9])[0-9]*(\.[0-9]*)?', 'number')
         self.set_tags('(true|false|null)', 'boolean')
 
     def set_tags(self, pattern, tag):
