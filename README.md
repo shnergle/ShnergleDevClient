@@ -10,7 +10,7 @@ Requirements
 ------------
 
 * Python 3 (included in binary)
-* py2app (for creating binary)
+* py2app (to build binary)
 
 
 Features
@@ -18,6 +18,7 @@ Features
 
 * Easy access to all methods
 * Readable JSON output
+* Syntax highlighting
 * Implements app secret
 * Usable interface to insert POST parameters
 * Parameter history

@@ -7,6 +7,37 @@ import urllib.parse
 import urllib.request
 
 
+class JSONText(tk.Text):
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.tag_configure('keystring', foreground='#000080')
+        self.tag_configure('string', foreground='#dd1144')
+        self.tag_configure('number', foreground='#009999')
+        self.tag_configure('boolean', font=('bold'))
+    
+    def highlight(self):
+        self.set_tags('"[^":]*"(?=\:)', 'keystring')
+        self.set_tags('"[^":]*"(?!\:)', 'string')
+        self.set_tags('[\d\.]', 'number')
+        self.set_tags('(true|false|null)', 'boolean')
+    
+    def set_tags(self, pattern, tag):
+        start = self.index('1.0')
+        self.mark_set('matchStart', start)
+        self.mark_set('matchEnd', start)
+        self.mark_set('searchLimit', self.index('end'))
+        count = tk.IntVar()
+        while True:
+            index = self.search(pattern, 'matchEnd', 'searchLimit',
+                                count=count, regexp=True)
+            if not index:
+                break
+            self.mark_set('matchStart', index)
+            self.mark_set('matchEnd', '{}+{}c'.format(index, count.get()))
+            self.tag_add(tag, 'matchStart', 'matchEnd')
+
+
 class App(ttk.Frame):
 
     def __init__(self, master=None):
@@ -114,7 +145,7 @@ class App(ttk.Frame):
 
         editor = ttk.Frame(self)
 
-        self.output = tk.Text(editor, state='disabled')
+        self.output = JSONText(editor, state='disabled')
         self.output.grid(sticky='nswe')
         output_scroll_y = ttk.Scrollbar(editor, orient=tk.VERTICAL,
                                         command=self.output.yview)
@@ -167,6 +198,7 @@ class App(ttk.Frame):
         except Exception as e:
             result = e
         self.output.insert(tk.END, result)
+        self.output.highlight()
 
         self.output['state'] = 'disabled'
 
@@ -183,8 +215,7 @@ class App(ttk.Frame):
         if self.post_facebook.get():
             res['facebook_token'] = self.post_facebook.get()
         if self.post_image.get():
-            pass
-            #TODO: send image to server
+            pass #TODO: send image to server
         return urllib.parse.urlencode(res).encode('utf8')
 
     def pretty_print(self, jsonstr):
