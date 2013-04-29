@@ -1,4 +1,5 @@
 import json
+import threading
 import tkinter as tk
 import tkinter.filedialog as filedialog
 import tkinter.ttk as ttk
@@ -170,37 +171,14 @@ class App(ttk.Frame):
         return self
 
     def retrieve(self):
-        self.output['state'] = 'normal'
-
-        for combo in (self.combo_facebook, self.combo_params,
-                      self.combo_image):
-            combo_params = []
-            combo_params.append(combo.get())
-            for item in combo['values']:
-                if item and item != combo.get():
-                    combo_params.append(item)
-            combo['values'] = combo_params
-
-        try:
-            self.output.delete('1.0', tk.END)
-        except Exception:
-            pass
-
-        result = ''
-        try:
-            result = urllib.request.urlopen(self.address, self.data)
-            result = self.pretty_print(result.read().decode('utf8'))
-        except urllib.error.URLError as e:
-            if hasattr(e, 'read'):
-                result = self.pretty_print(e.read().decode('utf8'))
-            else:
-                result = e
-        except Exception as e:
-            result = e
-        self.output.insert(tk.END, result)
-        self.output.highlight()
-
-        self.output['state'] = 'disabled'
+        self.dialog = tk.Toplevel(self)
+        self.dialog.resizable(tk.FALSE, tk.FALSE)
+        self.dialog.title('Loading...')
+        progress = ttk.Progressbar(self.dialog, orient=tk.HORIZONTAL,
+                                   length=250, mode='indeterminate')
+        progress.pack()
+        progress.start()
+        RetrievalThread(self).start()
 
     @property
     def address(self):
@@ -248,6 +226,47 @@ class App(ttk.Frame):
     def browse_image(self):
         self.post_image.set(filedialog.askopenfilename())
 
+
+class RetrievalThread(threading.Thread):
+    
+    def __init__(self, main):
+        super().__init__()
+        self.main = main
+        
+    def run(self):
+        self.main.output['state'] = 'normal'
+
+        for combo in (self.main.combo_facebook, self.main.combo_params,
+                      self.main.combo_image):
+            combo_params = []
+            combo_params.append(combo.get())
+            for item in combo['values']:
+                if item and item != combo.get():
+                    combo_params.append(item)
+            combo['values'] = combo_params
+
+        try:
+            self.main.output.delete('1.0', tk.END)
+        except Exception:
+            pass
+
+        result = ''
+        try:
+            result = urllib.request.urlopen(self.main.address, self.main.data)
+            result = self.main.pretty_print(result.read().decode('utf8'))
+        except urllib.error.URLError as e:
+            if hasattr(e, 'read'):
+                result = self.main.pretty_print(e.read().decode('utf8'))
+            else:
+                result = e
+        except Exception as e:
+            result = e
+        self.main.output.insert(tk.END, result)
+        self.main.output.highlight()
+
+        self.main.output['state'] = 'disabled'
+        self.main.dialog.destroy()
+        
 
 if __name__ == '__main__':
     App().init().mainloop()
