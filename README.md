@@ -21,4 +21,5 @@ Features
 * Syntax highlighting
 * Implements app secret
 * Usable interface to insert POST parameters
+* Image upload
 * Parameter history
