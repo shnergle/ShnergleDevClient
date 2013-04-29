@@ -9,20 +9,20 @@ import urllib.request
 
 
 class JSONText(tk.Text):
-    
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.tag_configure('keystring', foreground='#000080')
         self.tag_configure('string', foreground='#dd1144')
         self.tag_configure('number', foreground='#009999')
-        self.tag_configure('boolean', font=('bold'))
-    
+        self.tag_configure('boolean', font='bold')
+
     def highlight(self):
         self.set_tags('"[^":]*"(?=\:)', 'keystring')
         self.set_tags('"[^":]*"(?!\:)', 'string')
         self.set_tags('[\d\.]', 'number')
         self.set_tags('(true|false|null)', 'boolean')
-    
+
     def set_tags(self, pattern, tag):
         start = self.index('1.0')
         self.mark_set('matchStart', start)
@@ -158,7 +158,7 @@ class App(ttk.Frame):
                               yscrollcommand=output_scroll_y.set)
 
         ttk.Sizegrip(editor).grid(row=1, column=1, sticky='se')
-        
+
         editor.rowconfigure(0, weight=1)
         editor.columnconfigure(0, weight=1)
         editor.grid(columnspan=4, sticky='nswe')
@@ -228,11 +228,11 @@ class App(ttk.Frame):
 
 
 class RetrievalThread(threading.Thread):
-    
+
     def __init__(self, main):
         super().__init__()
         self.main = main
-        
+
     def run(self):
         self.main.output['state'] = 'normal'
 
@@ -266,7 +266,7 @@ class RetrievalThread(threading.Thread):
 
         self.main.output['state'] = 'disabled'
         self.main.dialog.destroy()
-        
+
 
 if __name__ == '__main__':
     App().init().mainloop()
