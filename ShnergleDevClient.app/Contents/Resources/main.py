@@ -12,17 +12,17 @@ class JSONText(tk.Text):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.tag_configure('keystring', foreground='#000080')
-        self.tag_configure('string', foreground='#dd1144')
         self.tag_configure('number', foreground='#009999')
         self.tag_configure('boolean', font='bold')
-
+        self.tag_configure('string', foreground='#dd1144')
+        self.tag_configure('keystring', foreground='#000080')
+        
     def highlight(self):
-        self.set_tags('"[^":]*"(?=\:)', 'keystring')
-        self.set_tags('"[^":]*"(?!\:)', 'string')
-        self.set_tags('[\d\.]', 'number')
+        self.set_tags('(0|[1-9])[0-9]*(\.[0-9]*)?', 'number')
         self.set_tags('(true|false|null)', 'boolean')
-
+        self.set_tags('"[^":]*"', 'string')
+        self.set_tags('"[^":]*"(?=\:)', 'keystring')
+        
     def set_tags(self, pattern, tag):
         start = self.index('1.0')
         self.mark_set('matchStart', start)
@@ -73,7 +73,7 @@ class App(ttk.Frame):
         self.url_port = tk.StringVar()
         self.url_port.set('8080')
         menu_port.add_radiobutton(label='Default', variable=self.url_port,
-                                  value='')
+                                  value='default')
         menu_port.add_separator()
         menu_port.add_radiobutton(label='80', variable=self.url_port,
                                   value='80')
@@ -81,6 +81,25 @@ class App(ttk.Frame):
                                   value='443')
         menu_port.add_radiobutton(label='8080', variable=self.url_port,
                                   value='8080')
+                                  
+        menu_version = tk.Menu(menu)
+        self.url_version = tk.StringVar()
+        self.url_version.set('latest')
+        menu_version.add_radiobutton(label='Latest', variable=self.url_version,
+                                     value='latest')
+        menu_version.add_separator()
+        menu_version.add_radiobutton(label='1', variable=self.url_version,
+                                     value='v1')
+                                  
+        menu_wrap = tk.Menu(menu)
+        self.wrap_mode = tk.StringVar()
+        self.wrap_mode.set('none')
+        menu_wrap.add_radiobutton(label='None', variable=self.wrap_mode,
+                                  value='none', command=self.set_wrap)
+        menu_wrap.add_radiobutton(label='Character', variable=self.wrap_mode,
+                                  value='char', command=self.set_wrap)
+        menu_wrap.add_radiobutton(label='Word', variable=self.wrap_mode,
+                                  value='word', command=self.set_wrap)
 
         menu_clear_history = tk.Menu(menu)
         menu_clear_history.add_command(label='Facebook Token',
@@ -96,6 +115,8 @@ class App(ttk.Frame):
         menu.add_cascade(menu=menu_protocol, label='Protocol')
         menu.add_cascade(menu=menu_server, label='Server')
         menu.add_cascade(menu=menu_port, label='Port')
+        menu.add_cascade(menu=menu_version, label='API Version')
+        menu.add_cascade(menu=menu_wrap, label='Editor Wrap')
         menu.add_cascade(menu=menu_clear_history, label='Clear History')
         self.master['menu'] = menu
 
@@ -155,7 +176,8 @@ class App(ttk.Frame):
                                         command=self.output.xview)
         output_scroll_x.grid(sticky='we')
         self.output.configure(xscrollcommand=output_scroll_x.set,
-                              yscrollcommand=output_scroll_y.set)
+                              yscrollcommand=output_scroll_y.set,
+                              wrap=self.wrap_mode.get())
 
         ttk.Sizegrip(editor).grid(row=1, column=1, sticky='se')
 
@@ -182,9 +204,15 @@ class App(ttk.Frame):
 
     @property
     def address(self):
+        port = ''
+        if self.url_port.get() != 'default':
+            port = ':' + self.url_port.get()
+        version = ''
+        if self.url_version.get() != 'latest':
+            version = '/v' + self.url_version.get()
         return (self.url_protocol.get() + '://' + self.url_server.get() +
-                (':' + self.url_port.get() if self.url_port.get() else '') +
-                '/' + self.url_method.get() + '/' + self.url_action.get())
+                port + version + '/' + self.url_method.get() + '/' +
+                self.url_action.get())
 
     @property
     def data(self):
@@ -225,6 +253,9 @@ class App(ttk.Frame):
 
     def browse_image(self):
         self.post_image.set(filedialog.askopenfilename())
+        
+    def set_wrap(self):
+        self.output['wrap'] = self.wrap_mode.get()
 
 
 class RetrievalThread(threading.Thread):
