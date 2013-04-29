@@ -81,6 +81,16 @@ class App(ttk.Frame):
                                   value='443')
         menu_port.add_radiobutton(label='8080', variable=self.url_port,
                                   value='8080')
+                                  
+        menu_wrap = tk.Menu(menu)
+        self.wrap_mode = tk.StringVar()
+        self.wrap_mode.set('none')
+        menu_wrap.add_radiobutton(label='None', variable=self.wrap_mode,
+                                  value='none', command=self.set_wrap)
+        menu_wrap.add_radiobutton(label='Character', variable=self.wrap_mode,
+                                  value='char', command=self.set_wrap)
+        menu_wrap.add_radiobutton(label='Word', variable=self.wrap_mode,
+                                  value='word', command=self.set_wrap)
 
         menu_clear_history = tk.Menu(menu)
         menu_clear_history.add_command(label='Facebook Token',
@@ -96,6 +106,7 @@ class App(ttk.Frame):
         menu.add_cascade(menu=menu_protocol, label='Protocol')
         menu.add_cascade(menu=menu_server, label='Server')
         menu.add_cascade(menu=menu_port, label='Port')
+        menu.add_cascade(menu=menu_wrap, label='Editor Wrap')
         menu.add_cascade(menu=menu_clear_history, label='Clear History')
         self.master['menu'] = menu
 
@@ -155,7 +166,8 @@ class App(ttk.Frame):
                                         command=self.output.xview)
         output_scroll_x.grid(sticky='we')
         self.output.configure(xscrollcommand=output_scroll_x.set,
-                              yscrollcommand=output_scroll_y.set)
+                              yscrollcommand=output_scroll_y.set,
+                              wrap=self.wrap_mode.get())
 
         ttk.Sizegrip(editor).grid(row=1, column=1, sticky='se')
 
@@ -225,6 +237,9 @@ class App(ttk.Frame):
 
     def browse_image(self):
         self.post_image.set(filedialog.askopenfilename())
+        
+    def set_wrap(self):
+        self.output['wrap'] = self.wrap_mode.get()
 
 
 class RetrievalThread(threading.Thread):
