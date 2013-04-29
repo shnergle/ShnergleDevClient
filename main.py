@@ -12,17 +12,17 @@ class JSONText(tk.Text):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.tag_configure('keystring', foreground='#000080')
-        self.tag_configure('string', foreground='#dd1144')
         self.tag_configure('number', foreground='#009999')
         self.tag_configure('boolean', font='bold')
-
+        self.tag_configure('string', foreground='#dd1144')
+        self.tag_configure('keystring', foreground='#000080')
+        
     def highlight(self):
-        self.set_tags('"[^":]*"(?=\:)', 'keystring')
-        self.set_tags('"[^":]*"(?!\:)', 'string')
         self.set_tags('(0|[1-9])[0-9]*(\.[0-9]*)?', 'number')
         self.set_tags('(true|false|null)', 'boolean')
-
+        self.set_tags('"[^":]*"', 'string')
+        self.set_tags('"[^":]*"(?=\:)', 'keystring')
+        
     def set_tags(self, pattern, tag):
         start = self.index('1.0')
         self.mark_set('matchStart', start)
