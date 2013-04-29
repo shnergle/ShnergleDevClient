@@ -78,7 +78,7 @@ class App(ttk.Frame):
         ttk.Button(main_bar, text='Send', command=self.retrieve).grid(row=0,
                                                                       column=3)
 
-        main_bar.grid(columnspan=5, sticky='nswe')
+        main_bar.grid(columnspan=4, sticky='nswe')
         main_bar.columnconfigure(0, weight=1)
 
         ttk.Label(self, text='Facebook Token:').grid()
