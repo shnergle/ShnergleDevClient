@@ -82,6 +82,15 @@ class App(ttk.Frame):
         menu_port.add_radiobutton(label='8080', variable=self.url_port,
                                   value='8080')
                                   
+        menu_version = tk.Menu(menu)
+        self.url_version = tk.StringVar()
+        self.url_version.set('latest')
+        menu_version.add_radiobutton(label='Latest', variable=self.url_version,
+                                     value='latest')
+        menu_version.add_separator()
+        menu_version.add_radiobutton(label='1', variable=self.url_version,
+                                     value='v1')
+                                  
         menu_wrap = tk.Menu(menu)
         self.wrap_mode = tk.StringVar()
         self.wrap_mode.set('none')
@@ -106,6 +115,7 @@ class App(ttk.Frame):
         menu.add_cascade(menu=menu_protocol, label='Protocol')
         menu.add_cascade(menu=menu_server, label='Server')
         menu.add_cascade(menu=menu_port, label='Port')
+        menu.add_cascade(menu=menu_version, label='API Version')
         menu.add_cascade(menu=menu_wrap, label='Editor Wrap')
         menu.add_cascade(menu=menu_clear_history, label='Clear History')
         self.master['menu'] = menu
@@ -194,9 +204,14 @@ class App(ttk.Frame):
 
     @property
     def address(self):
+        port = ''
+        if self.url_port.get() != 'default':
+            port = ':' + self.url_port.get()
+        version = ''
+        if self.url_version.get() != 'latest':
+            version = '/v' + self.url_version.get()
         return (self.url_protocol.get() + '://' + self.url_server.get() +
-                (':' + self.url_port.get() if self.url_port.get() == 'def'
-                 else '') + '/' + self.url_method.get() + '/' +
+                port + version + '/' + self.url_method.get() + '/' +
                 self.url_action.get())
 
     @property
