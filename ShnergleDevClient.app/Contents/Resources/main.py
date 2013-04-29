@@ -18,6 +18,7 @@ class App(ttk.Frame):
 
         self.master.option_add('*tearOff', tk.FALSE)
         menu = tk.Menu(self.master)
+
         menu_protocol = tk.Menu(menu)
         self.url_protocol = tk.StringVar()
         self.url_protocol.set('http')
@@ -26,6 +27,7 @@ class App(ttk.Frame):
         menu_protocol.add_radiobutton(label='HTTPS',
                                       variable=self.url_protocol,
                                       value='https')
+
         menu_server = tk.Menu(menu)
         self.url_server = tk.StringVar()
         self.url_server.set('localhost')
@@ -34,6 +36,7 @@ class App(ttk.Frame):
                                     value='shnergle-server.appspot.com')
         menu_server.add_radiobutton(label='localhost',variable=self.url_server,
                                     value='localhost')
+
         menu_port = tk.Menu(menu)
         self.url_port = tk.StringVar()
         self.url_port.set('8080')
@@ -46,6 +49,7 @@ class App(ttk.Frame):
                                   value='443')
         menu_port.add_radiobutton(label='8080', variable=self.url_port,
                                   value='8080')
+
         menu_clear_history = tk.Menu(menu)
         menu_clear_history.add_command(label='Facebook Token',
                                        command=self.clear_history_facebook)
@@ -56,6 +60,7 @@ class App(ttk.Frame):
         menu_clear_history.add_separator()
         menu_clear_history.add_command(label='All',
                                        command=self.clear_history)
+
         menu.add_cascade(menu=menu_protocol, label='Protocol')
         menu.add_cascade(menu=menu_server, label='Server')
         menu.add_cascade(menu=menu_port, label='Port')
@@ -107,18 +112,24 @@ class App(ttk.Frame):
         ttk.Button(self, text='Clear', command=self.clear_image).grid(
             row=3, column=3)
 
-        self.output = tk.Text(self, state='disabled')
-        self.output.grid(columnspan=4, sticky='nswe')
-        output_scroll_y = ttk.Scrollbar(self, orient=tk.VERTICAL,
+        editor = ttk.Frame(self)
+
+        self.output = tk.Text(editor, state='disabled')
+        self.output.grid(sticky='nswe')
+        output_scroll_y = ttk.Scrollbar(editor, orient=tk.VERTICAL,
                                         command=self.output.yview)
-        output_scroll_y.grid(row=4, column=4, sticky='ns')
-        output_scroll_x = ttk.Scrollbar(self, orient=tk.HORIZONTAL,
+        output_scroll_y.grid(row=0, column=1, sticky='ns')
+        output_scroll_x = ttk.Scrollbar(editor, orient=tk.HORIZONTAL,
                                         command=self.output.xview)
-        output_scroll_x.grid(columnspan=4, sticky='we')
+        output_scroll_x.grid(sticky='we')
         self.output.configure(xscrollcommand=output_scroll_x.set,
                               yscrollcommand=output_scroll_y.set)
 
-        ttk.Sizegrip(self).grid(row=5, column=4, sticky='se')
+        ttk.Sizegrip(editor).grid(row=1, column=1, sticky='se')
+        
+        editor.rowconfigure(0, weight=1)
+        editor.columnconfigure(0, weight=1)
+        editor.grid(columnspan=4, sticky='nswe')
 
         self.winfo_toplevel().rowconfigure(0, weight=1)
         self.winfo_toplevel().columnconfigure(0, weight=1)
