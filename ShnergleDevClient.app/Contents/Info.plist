@@ -61,6 +61,7 @@
 	<key>PyRuntimeLocations</key>
 	<array>
 		<string>@executable_path/../Frameworks/Python.framework/Versions/2.7/Python</string>
+		<string>/System/Library/Frameworks/Python.framework/Versions/2.7/Python</string>
 	</array>
 	<key>PythonInfoDict</key>
 	<dict>
