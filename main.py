@@ -1,17 +1,15 @@
 import json
 import threading
-import tkinter as tk
-import tkinter.filedialog as filedialog
-import tkinter.ttk as ttk
-import urllib.error
-import urllib.parse
-import urllib.request
+import Tkinter as tk
+import ttk
+import urllib
+import urllib2
 
 
 class JSONText(tk.Text):
 
     def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+        tk.Text.__init__(self, *args, **kwargs)
         self.tag_configure('number', foreground='#009999')
         self.tag_configure('boolean', font='bold')
         self.tag_configure('string', foreground='#dd1144')
@@ -42,7 +40,7 @@ class JSONText(tk.Text):
 class App(ttk.Frame):
 
     def __init__(self, master=None):
-        super().__init__(master)
+        ttk.Frame.__init__(self, master)
         self.grid(sticky='nswe')
 
     def init(self):
@@ -223,7 +221,7 @@ class App(ttk.Frame):
             res['facebook_token'] = self.post_facebook.get()
         if self.post_image.get():
             res['image'] = open(self.post_image.get())
-        return urllib.parse.urlencode(res).encode('utf8')
+        return urllib.urlencode(res).encode('utf8')
 
     def escape(self, jsonstr):
         jsonstr = jsonstr.replace('\\n', '\n')
@@ -271,7 +269,7 @@ class App(ttk.Frame):
 class RetrievalThread(threading.Thread):
 
     def __init__(self, main):
-        super().__init__()
+        threading.Thread.__init__(self)
         self.main = main
 
     def run(self):
@@ -293,9 +291,9 @@ class RetrievalThread(threading.Thread):
 
         result = ''
         try:
-            result = urllib.request.urlopen(self.main.address, self.main.data)
+            result = urllib2.urlopen(self.main.address, self.main.data)
             result = self.main.pretty_print(result.read().decode('utf8'))
-        except urllib.error.URLError as e:
+        except urllib2.URLError as e:
             if hasattr(e, 'read'):
                 result = self.main.pretty_print(e.read().decode('utf8'))
             else:
