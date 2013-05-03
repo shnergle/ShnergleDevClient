@@ -53,7 +53,7 @@ class App(ttk.Frame):
 
         menu_protocol = tk.Menu(menu)
         self.url_protocol = tk.StringVar()
-        self.url_protocol.set('http')
+        self.url_protocol.set('https')
         menu_protocol.add_radiobutton(label='HTTP', variable=self.url_protocol,
                                       value='http')
         menu_protocol.add_radiobutton(label='HTTPS',
@@ -62,16 +62,17 @@ class App(ttk.Frame):
 
         menu_server = tk.Menu(menu)
         self.url_server = tk.StringVar()
-        self.url_server.set('localhost')
-        menu_server.add_radiobutton(label='shnergle-server.appspot.com',
+        self.url_server.set('shnergle-api.azurewebsites.net')
+        menu_server.add_radiobutton(label='shnergle-api.azurewebsites.net',
                                     variable=self.url_server,
-                                    value='shnergle-server.appspot.com')
-        menu_server.add_radiobutton(label='localhost',variable=self.url_server,
+                                    value='shnergle-api.azurewebsites.net')
+        menu_server.add_radiobutton(label='localhost',
+                                    variable=self.url_server,
                                     value='localhost')
 
         menu_port = tk.Menu(menu)
         self.url_port = tk.StringVar()
-        self.url_port.set('8080')
+        self.url_port.set('default')
         menu_port.add_radiobutton(label='Default', variable=self.url_port,
                                   value='default')
         menu_port.add_separator()
