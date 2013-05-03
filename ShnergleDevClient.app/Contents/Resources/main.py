@@ -225,9 +225,18 @@ class App(ttk.Frame):
             res['image'] = open(self.post_image.get())
         return urllib.parse.urlencode(res).encode('utf8')
 
+    def escape(self, jsonstr):
+        jsonstr = jsonstr.replace('\\n', '\n')
+        jsonstr = jsonstr.replace('\\"', "'")
+        jsonstr = jsonstr.replace('\\\\', '\\')
+        return jsonstr
+        
     def pretty_print(self, jsonstr):
-        return json.dumps(json.loads(jsonstr), sort_keys=True,
-                          indent=4, separators=(',', ': '))
+        try:
+            return self.escape(json.dumps(json.loads(jsonstr), sort_keys=True,
+                                          indent=4, separators=(',', ': ')))
+        except Exception:
+            return jsonstr
 
     def clear_facebook(self):
         self.post_facebook.set('')
