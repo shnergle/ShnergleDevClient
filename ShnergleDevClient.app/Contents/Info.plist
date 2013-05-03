@@ -44,10 +44,10 @@
 		<false/>
 		<key>argv_emulation</key>
 		<false/>
-		<key>emulate_shell_environment</key>
-		<false/>
 		<key>no_chdir</key>
 		<false/>
+		<key>optimize</key>
+		<integer>0</integer>
 		<key>prefer_ppc</key>
 		<false/>
 		<key>site_packages</key>
@@ -56,20 +56,21 @@
 		<false/>
 	</dict>
 	<key>PyResourcePackages</key>
-	<array/>
+	<array>
+	</array>
 	<key>PyRuntimeLocations</key>
 	<array>
-		<string>@executable_path/../Frameworks/Python.framework/Versions/3.3/Python</string>
+		<string>@executable_path/../Frameworks/Python.framework/Versions/2.7/Python</string>
 	</array>
 	<key>PythonInfoDict</key>
 	<dict>
 		<key>PythonExecutable</key>
-		<string>/opt/local/bin/python3.3</string>
+		<string>/usr/bin/python</string>
 		<key>PythonLongVersion</key>
-		<string>3.3.1 (default, Apr  6 2013, 12:29:05) 
-[GCC 4.2.1 Compatible Apple Clang 4.1 ((tags/Apple/clang-421.11.66))]</string>
+		<string>2.7.2 (default, Oct 11 2012, 20:14:37) 
+[GCC 4.2.1 Compatible Apple Clang 4.0 (tags/Apple/clang-418.0.60)]</string>
 		<key>PythonShortVersion</key>
-		<string>3.3</string>
+		<string>2.7</string>
 		<key>py2app</key>
 		<dict>
 			<key>alias</key>
@@ -77,7 +78,7 @@
 			<key>template</key>
 			<string>app</string>
 			<key>version</key>
-			<string>0.7.3</string>
+			<string>0.6.3</string>
 		</dict>
 	</dict>
 </dict>
