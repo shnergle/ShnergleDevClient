@@ -1,5 +1,8 @@
+#!/usr/bin/env python
+
 import json
 import threading
+import time
 import Tkinter as tk
 import ttk
 import urllib
@@ -110,6 +113,10 @@ class App(ttk.Frame):
         menu_clear_history.add_separator()
         menu_clear_history.add_command(label='All',
                                        command=self.clear_history)
+        
+        menu_window = tk.Menu(menu, name='file')
+        
+        menu_help = tk.Menu(menu, name='help')
 
         menu.add_cascade(menu=menu_protocol, label='Protocol')
         menu.add_cascade(menu=menu_server, label='Server')
@@ -117,6 +124,8 @@ class App(ttk.Frame):
         menu.add_cascade(menu=menu_version, label='API Version')
         menu.add_cascade(menu=menu_wrap, label='Editor Wrap')
         menu.add_cascade(menu=menu_clear_history, label='Clear History')
+        menu.add_cascade(menu=menu_window, label='Window')
+        menu.add_cascade(menu=menu_help, label='Help')
         self.master['menu'] = menu
 
         main_bar = ttk.Frame(self)
@@ -290,9 +299,14 @@ class RetrievalThread(threading.Thread):
             pass
 
         result = ''
+        loadtime = None
         try:
+            loadtime = time.time()
             result = urllib2.urlopen(self.main.address, self.main.data)
-            result = self.main.pretty_print(result.read().decode('utf8'))
+            result = result.read()
+            loadtime = time.time() - loadtime
+            self.main.master.title('ShnergleDevClient - ' + str(loadtime) + 's')
+            result = self.main.pretty_print(result.decode('utf8'))
         except urllib2.URLError as e:
             if hasattr(e, 'read'):
                 result = self.main.pretty_print(e.read().decode('utf8'))
