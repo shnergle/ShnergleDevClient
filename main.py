@@ -104,7 +104,7 @@ class App(ttk.Frame):
                                   value='word', command=self.set_wrap)
 
         menu_clear_history = tk.Menu(menu)
-        menu_clear_history.add_command(label='Facebook Token',
+        menu_clear_history.add_command(label='Facebook ID',
                                        command=self.clear_history_facebook)
         menu_clear_history.add_command(label='Other Parameters',
                                       command=self.clear_history_params)
@@ -132,7 +132,9 @@ class App(ttk.Frame):
 
         self.url_method = tk.StringVar()
         ttk.Combobox(main_bar, textvariable=self.url_method,
-                     values=['users', 'user_searches']).grid(sticky='nswe')
+                     values=['rankings',
+                             'users',
+                             'user_searches']).grid(sticky='nswe')
 
         self.url_action = tk.StringVar()
         self.url_action.set('get')
@@ -147,7 +149,7 @@ class App(ttk.Frame):
         main_bar.grid(columnspan=4, sticky='nswe')
         main_bar.columnconfigure(0, weight=1)
 
-        ttk.Label(self, text='Facebook Token:').grid()
+        ttk.Label(self, text='Facebook ID:').grid()
         self.post_facebook = tk.StringVar()
         self.post_facebook.set('test')
         self.combo_facebook = ttk.Combobox(self,
@@ -227,7 +229,7 @@ class App(ttk.Frame):
         res = dict(i.split('=') for i in self.post_params.get().split('&'))
         res['app_secret'] = 'FCuf65iuOUDCjlbiyyer678Coutyc64v655478VGvgh76'
         if self.post_facebook.get():
-            res['facebook_token'] = self.post_facebook.get()
+            res['facebook_id'] = self.post_facebook.get()
         if self.post_image.get():
             res['image'] = open(self.post_image.get())
         return urllib.urlencode(res).encode('utf8')
