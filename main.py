@@ -132,7 +132,8 @@ class App(ttk.Frame):
 
         self.url_method = tk.StringVar()
         ttk.Combobox(main_bar, textvariable=self.url_method,
-                     values=['rankings',
+                     values=['images',
+                             'rankings',
                              'users',
                              'user_searches']).grid(sticky='nswe')
 
